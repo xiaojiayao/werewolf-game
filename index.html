@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>诡话连篇</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(180deg,#0a0020,#1a0a4e,#0a0020);color:#e0d0ff;min-height:100vh;overflow-x:hidden}
+.header{text-align:center;padding:16px 8px 8px}
+.header h1{font-size:1.8em;background:linear-gradient(90deg,#c084fc,#60a5fa,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:4px}
+.header .sub{font-size:.75em;color:#7c6aaa;margin-top:4px}
+.info-bar{display:flex;justify-content:center;gap:10px;padding:8px;font-size:.75em;flex-wrap:wrap}
+.info-bar span{background:rgba(100,60,200,.15);padding:3px 10px;border-radius:10px;border:1px solid rgba(139,92,246,.25);color:#a78bfa}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 12px;max-width:400px;margin:0 auto}
+.card{position:relative;perspective:800px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.card-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 6px}
+.card-front{background:linear-gradient(145deg,rgba(80,40,140,.7),rgba(50,20,90,.85));border:2px solid rgba(120,70,200,.35)}
+.card-back{background:linear-gradient(145deg,rgba(30,50,120,.8),rgba(20,30,80,.9));border:2px solid rgba(60,130,246,.35);transform:rotateY(180deg)}
+.card .pos{position:absolute;top:4px;left:6px;font-size:.55em;color:rgba(200,180,255,.5);font-weight:bold;z-index:2}
+.card .ava{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid rgba(200,180,255,.3)}
+.card .ava svg{width:100%;height:100%}
+.card .nm{font-size:.8em;font-weight:bold;color:#e8e0ff;margin-top:4px}
+.card .role-tag{font-size:.6em;padding:2px 8px;border-radius:6px;display:inline-block;margin:4px 0}
+.role-wolf{background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.role-guard{background:rgba(56,189,248,.2);color:#38bdf8;border:1px solid rgba(56,189,248,.3)}
+.role-witch{background:rgba(192,132,252,.2);color:#c084fc;border:1px solid rgba(192,132,252,.3)}
+.role-seer{background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.role-villager{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+.card .clue{font-size:.6em;color:#ddd0ff;margin-top:4px;line-height:1.3;padding:3px 4px;background:rgba(0,0,0,.25);border-radius:4px;text-align:center}
+.card.selected .card-front{border-color:#22c55e!important;box-shadow:0 0 15px rgba(34,197,94,.4)}
+.actions{text-align:center;padding:12px 8px 24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{padding:10px 24px;border:none;border-radius:20px;font-size:.9em;font-weight:bold;cursor:pointer;transition:all .2s}
+.btn-vote{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+.btn-vote:disabled{opacity:.4}
+.btn-new{background:rgba(100,60,200,.2);color:#a78bfa;border:1px solid rgba(139,92,246,.3)}
+.btn:active{transform:scale(.95)}
+.result{text-align:center;padding:8px;font-size:1.1em;font-weight:bold;min-height:2em}
+.result .win{color:#4ade80}
+.result .lose{color:#ef4444}
+.conclusion{text-align:center;font-size:1.2em;font-weight:bold;color:#fbbf24;padding:8px 12px;min-height:1.5em}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🐺 诡话连篇</h1>
+<div class="sub">翻开卡片 · 推理真相 · 找出狼人</div>
+</div>
+<div class="info-bar" id="infoBar"></div>
+<div class="grid" id="grid"></div>
+<div class="conclusion" id="conclusion"></div>
+<div class="actions">
+<button class="btn btn-vote" id="voteBtn" disabled onclick="vote()">🗳️ 投票处决</button>
+<button class="btn btn-new" onclick="newGame()">🔄 新游戏</button>
+</div>
+<div class="result" id="result"></div>
+<script>
+const NAMES=['马小腾','陈老湿','范小轩','王冰冰','蒋三岁','曾小贤','张小翠','金小萌','甄迪帅','周星星','刘华仔','蒋不通'];
+function makeAvatar(seed,gender){
+  const colors=['#ff6b6b','#ffa94d','#ffd43b','#69db7c','#38d9a9','#4dabf7','#748ffc','#da77f2','#f783ac','#e599f7','#63e6be','#74c0fc'];
+  const skinTones=['#fddcb5','#f5c5a3','#e8b48a','#d4956b','#c68642'];
+  const hairColors=['#2c1810','#4a2c17','#8b4513','#d4a574','#1a1a2e','#c0392b'];
+  const bg=colors[seed%colors.length];
+  const skin=skinTones[seed%skinTones.length];
+  const hair=hairColors[seed%hairColors.length];
+  const eyeStyles=[
+    `<circle cx="38" cy="48" r="3" fill="#333"/><circle cx="62" cy="48" r="3" fill="#333"/>`,
+    `<ellipse cx="38" cy="48" rx="4" ry="3" fill="#333"/><ellipse cx="62" cy="48" rx="4" ry="3" fill="#333"/>`,
+    `<circle cx="38" cy="48" r="3.5" fill="#333"/><circle cx="62" cy="48" r="3.5" fill="#333"/><circle cx="39" cy="47" r="1" fill="#fff"/><circle cx="63" cy="47" r="1" fill="#fff"/>`,
+  ];
+  const mouthStyles=[
+    `<path d="M42 62 Q50 70 58 62" stroke="#333" stroke-width="2" fill="none"/>`,
+    `<ellipse cx="50" cy="63" rx="5" ry="3" fill="#e07070"/>`,
+    `<path d="M43 63 L57 63" stroke="#333" stroke-width="2"/>`,
+  ];
+  const hairStylesM=[
+    `<path d="M25 40 Q25 18 50 15 Q75 18 75 40 L72 35 Q70 22 50 20 Q30 22 28 35 Z" fill="${hair}"/>`,
+    `<path d="M22 42 Q22 15 50 12 Q78 15 78 42 L75 32 Q72 18 50 16 Q28 18 25 32 Z" fill="${hair}"/>`,
+  ];
+  const hairStylesF=[
+    `<path d="M20 45 Q20 15 50 12 Q80 15 80 45 L78 35 Q75 18 50 16 Q25 18 22 35 Z" fill="${hair}"/><path d="M22 42 Q18 65 22 80" stroke="${hair}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M78 42 Q82 65 78 80" stroke="${hair}" stroke-width="8" fill="none" stroke-linecap="round"/>`,
+    `<path d="M20 45 Q20 12 50 10 Q80 12 80 45 L78 32 Q75 16 50 14 Q25 16 22 32 Z" fill="${hair}"/><path d="M20 42 Q15 60 20 78" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M80 42 Q85 60 80 78" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/>`,
+  ];
+  const eyes=eyeStyles[seed%eyeStyles.length];
+  const mouth=mouthStyles[seed%mouthStyles.length];
+  const hairSvg=gender==='f'?hairStylesF[seed%hairStylesF.length]:hairStylesM[seed%hairStylesM.length];
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="50" fill="${bg}"/>
+    <ellipse cx="50" cy="58" rx="30" ry="35" fill="${skin}"/>
+    ${hairSvg}${eyes}${mouth}
+  </svg>`;
+}
+const GENDERS=['m','m','f','f','f','m','f','f','m','m','m','m'];
+const AVATARS=NAMES.map((n,i)=>makeAvatar(i,GENDERS[i]));
+const POS=['A1','B1','C1','A2','B2','C2','A3','B3','C3','A4','B4','C4'];
+const ROLE_INFO={wolf:{label:'狼人',cls:'role-wolf'},guard:{label:'守卫',cls:'role-guard'},witch:{label:'巫师',cls:'role-witch'},seer:{label:'预言家',cls:'role-seer'},villager:{label:'村民',cls:'role-villager'}};
+
+let players=[],selected=null,gameOver=false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+function rc(i){return{r:Math.floor(i/3),c:i%3}}
+function idx(r,c){return(r>=0&&r<4&&c>=0&&c<3)?r*3+c:-1}
+function neighbors(i){const{r,c}=rc(i);const ns=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;const j=idx(r+dr,c+dc);if(j>=0)ns.push(j)}return ns}
+function sameRow(i){const{r}=rc(i);return[0,1,2].map(c=>idx(r,c)).filter(j=>j!==i)}
+function sameCol(i){const{c}=rc(i);return[0,1,2,3].map(r=>idx(r,c)).filter(j=>j!==i)}
+
+function genClue(i){
+  const p=players[i],isWolf=p.role==='wolf';
+  const nbs=neighbors(i),row=sameRow(i),col=sameCol(i);
+  const nbWolves=nbs.filter(j=>players[j].role==='wolf').length;
+  const{r,c}=rc(i);
+  const dirs=[[0,-1,'左边'],[0,1,'右边'],[-1,0,'上面'],[1,0,'下面']];
+  let clues=[];
+
+  // 周围狼人数
+  clues.push({t:'我的周围没有狼人',v:nbWolves===0});
+  if(nbWolves>0)clues.push({t:'我的周围有'+nbWolves+'只狼',v:true});
+
+  // 方向
+  for(const[dr,dc,lb]of dirs){
+    const j=idx(r+dr,c+dc);
+    if(j>=0){
+      clues.push({t:'我'+lb+'的人是好人',v:players[j].role!=='wolf'});
+      clues.push({t:'我'+lb+'的人是狼人',v:players[j].role==='wolf'});
+    }
+  }
+
+  // 指名
+  const others=[...new Set([...nbs,...row,...col])];
+  shuffle(others);
+  for(let k=0;k<Math.min(2,others.length);k++){
+    const j=others[k];
+    clues.push({t:players[j].name+'是好人',v:players[j].role!=='wolf'});
+    clues.push({t:players[j].name+'是狼人',v:players[j].role==='wolf'});
+  }
+
+  // 身份相关
+  const specials=['guard','witch','seer'];
+  for(const s of specials){
+    const sp=players.find(x=>x.role===s||x.disguise===s);
+    if(sp){
+      clues.push({t:ROLE_INFO[s].label+'是最善良的人',v:sp.role!=='wolf'});
+      if(players.some(x=>x.role==='wolf'&&x.disguise===s))
+        clues.push({t:'有1匹狼穿上了'+ROLE_INFO[s].label+'的衣服',v:true});
+    }
+  }
+
+  // 自证
+  clues.push({t:'相信我，我是好人',v:!isWolf});
+  clues.push({t:'我发誓我不是狼人',v:!isWolf});
+
+  // 好人选真话，狼人选假话
+  const pool=clues.filter(c=>isWolf?!c.v:c.v);
+  return pool.length?rnd(pool).t:'我没什么想说的';
+}
+
+function initGame(){
+  players=[];selected=null;gameOver=false;
+  document.getElementById('result').innerHTML='';
+  document.getElementById('conclusion').textContent='';
+  document.getElementById('voteBtn').disabled=true;
+
+  // 分配身份
+  const roles=['wolf','wolf','wolf','guard','witch','seer','villager','villager','villager','villager','villager','villager'];
+  shuffle(roles);
+
+  // 狼人伪装（30%概率一只狼伪装特殊身份）
+  const wolfIdxs=roles.map((r,i)=>r==='wolf'?i:-1).filter(i=>i>=0);
+  let disguises={};
+  if(Math.random()<0.3){
+    const fakeRole=rnd(['guard','witch','seer']);
+    disguises[rnd(wolfIdxs)]=fakeRole;
+  }
+
+  for(let i=0;i<12;i++){
+    players.push({
+      name:NAMES[i],avatar:AVATARS[i],role:roles[i],
+      disguise:disguises[i]||null,clue:''
+    });
+  }
+  // 生成线索
+  for(let i=0;i<12;i++)players[i].clue=genClue(i);
+
+  // 渲染信息栏
+  const wolfCount=players.filter(p=>p.role==='wolf').length;
+  document.getElementById('infoBar').innerHTML=
+    `<span>🐺 狼人 ×${wolfCount}</span><span>👥 好人 ×${12-wolfCount}</span><span>💡 翻开卡片查看线索</span>`;
+
+  renderGrid();
+}
+
+function renderGrid(){
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  for(let i=0;i<12;i++){
+    const p=players[i];
+    const displayRole=p.disguise||p.role;
+    const ri=ROLE_INFO[displayRole]||ROLE_INFO.villager;
+    const card=document.createElement('div');
+    card.className='card'+(selected===i?' selected':'');
+    card.style.height='0';card.style.paddingBottom='130%';
+    card.innerHTML=`
+      <span class="pos">${POS[i]}</span>
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="ava">${p.avatar}</div>
+          <div class="nm">${p.name}</div>
+        </div>
+        <div class="card-back">
+          <div class="ava">${p.avatar}</div>
+          <div class="nm">${p.name}</div>
+          <span class="role-tag ${ri.cls}">${ri.label}</span>
+          <div class="clue">"${p.clue}"</div>
+        </div>
+      </div>`;
+    card.onclick=()=>clickCard(i,card);
+    grid.appendChild(card);
+  }
+}
+
+function clickCard(i,el){
+  if(gameOver)return;
+  el.classList.toggle('flipped');
+  // 长按选中投票
+}
+
+// 添加长按/双击选中
+document.getElementById('grid').addEventListener('dblclick',function(e){
+  if(gameOver)return;
+  const card=e.target.closest('.card');
+  if(!card)return;
+  const i=[...card.parentNode.children].indexOf(card);
+  if(selected===i){selected=null}
+  else{selected=i}
+  document.querySelectorAll('.card').forEach((c,idx)=>c.classList.toggle('selected',idx===selected));
+  document.getElementById('voteBtn').disabled=selected===null;
+});
+
+function vote(){
+  if(selected===null||gameOver)return;
+  gameOver=true;
+  const p=players[selected];
+  const res=document.getElementById('result');
+  // 翻开所有卡片
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('flipped'));
+  if(p.role==='wolf'){
+    res.innerHTML=`<span class="win">🎉 正确！${p.name} 是狼人！你赢了！</span>`;
+  }else{
+    const wolves=players.filter(x=>x.role==='wolf').map(x=>x.name).join('、');
+    res.innerHTML=`<span class="lose">💀 错了！${p.name} 是好人... 狼人是：${wolves}</span>`;
+  }
+}
+
+function newGame(){initGame()}
+initGame();
+</script>
+</body>
+</html>
