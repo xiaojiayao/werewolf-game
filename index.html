@@ -58,42 +58,190 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <div class="result" id="result"></div>
 <script>
 const NAMES=['马小腾','陈老湿','范小轩','王冰冰','蒋三岁','曾小贤','张小翠','金小萌','甄迪帅','周星星','刘华仔','蒋不通'];
-function makeAvatar(seed,gender){
-  const colors=['#ff6b6b','#ffa94d','#ffd43b','#69db7c','#38d9a9','#4dabf7','#748ffc','#da77f2','#f783ac','#e599f7','#63e6be','#74c0fc'];
-  const skinTones=['#fddcb5','#f5c5a3','#e8b48a','#d4956b','#c68642'];
-  const hairColors=['#2c1810','#4a2c17','#8b4513','#d4a574','#1a1a2e','#c0392b'];
-  const bg=colors[seed%colors.length];
-  const skin=skinTones[seed%skinTones.length];
-  const hair=hairColors[seed%hairColors.length];
-  const eyeStyles=[
-    `<circle cx="38" cy="48" r="3" fill="#333"/><circle cx="62" cy="48" r="3" fill="#333"/>`,
-    `<ellipse cx="38" cy="48" rx="4" ry="3" fill="#333"/><ellipse cx="62" cy="48" rx="4" ry="3" fill="#333"/>`,
-    `<circle cx="38" cy="48" r="3.5" fill="#333"/><circle cx="62" cy="48" r="3.5" fill="#333"/><circle cx="39" cy="47" r="1" fill="#fff"/><circle cx="63" cy="47" r="1" fill="#fff"/>`,
-  ];
-  const mouthStyles=[
-    `<path d="M42 62 Q50 70 58 62" stroke="#333" stroke-width="2" fill="none"/>`,
-    `<ellipse cx="50" cy="63" rx="5" ry="3" fill="#e07070"/>`,
-    `<path d="M43 63 L57 63" stroke="#333" stroke-width="2"/>`,
-  ];
-  const hairStylesM=[
-    `<path d="M25 40 Q25 18 50 15 Q75 18 75 40 L72 35 Q70 22 50 20 Q30 22 28 35 Z" fill="${hair}"/>`,
-    `<path d="M22 42 Q22 15 50 12 Q78 15 78 42 L75 32 Q72 18 50 16 Q28 18 25 32 Z" fill="${hair}"/>`,
-  ];
-  const hairStylesF=[
-    `<path d="M20 45 Q20 15 50 12 Q80 15 80 45 L78 35 Q75 18 50 16 Q25 18 22 35 Z" fill="${hair}"/><path d="M22 42 Q18 65 22 80" stroke="${hair}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M78 42 Q82 65 78 80" stroke="${hair}" stroke-width="8" fill="none" stroke-linecap="round"/>`,
-    `<path d="M20 45 Q20 12 50 10 Q80 12 80 45 L78 32 Q75 16 50 14 Q25 16 22 32 Z" fill="${hair}"/><path d="M20 42 Q15 60 20 78" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M80 42 Q85 60 80 78" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/>`,
-  ];
-  const eyes=eyeStyles[seed%eyeStyles.length];
-  const mouth=mouthStyles[seed%mouthStyles.length];
-  const hairSvg=gender==='f'?hairStylesF[seed%hairStylesF.length]:hairStylesM[seed%hairStylesM.length];
-  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="50" fill="${bg}"/>
-    <ellipse cx="50" cy="58" rx="30" ry="35" fill="${skin}"/>
-    ${hairSvg}${eyes}${mouth}
-  </svg>`;
-}
 const GENDERS=['m','m','f','f','f','m','f','f','m','m','m','m'];
-const AVATARS=NAMES.map((n,i)=>makeAvatar(i,GENDERS[i]));
+const AVATARS=[
+// 0 马小腾 - 男，商务短发，戴眼镜，自信微笑
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#4a90d9"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#fddcb5"/>
+<path d="M24 42 Q24 16 50 13 Q76 16 76 42 L73 34 Q70 20 50 18 Q30 20 27 34Z" fill="#2c1810"/>
+<rect x="30" y="46" width="16" height="10" rx="5" fill="none" stroke="#555" stroke-width="1.8"/>
+<rect x="54" y="46" width="16" height="10" rx="5" fill="none" stroke="#555" stroke-width="1.8"/>
+<line x1="46" y1="51" x2="54" y2="51" stroke="#555" stroke-width="1.5"/>
+<circle cx="38" cy="51" r="2.5" fill="#2c1810"/><circle cx="62" cy="51" r="2.5" fill="#2c1810"/>
+<circle cx="39" cy="50" r="0.8" fill="#fff"/><circle cx="63" cy="50" r="0.8" fill="#fff"/>
+<path d="M43 67 Q50 73 57 67" stroke="#c0392b" stroke-width="2" fill="#e07070"/>
+<ellipse cx="30" cy="60" rx="5" ry="3" fill="#f5b8a0" opacity="0.5"/>
+<ellipse cx="70" cy="60" rx="5" ry="3" fill="#f5b8a0" opacity="0.5"/>
+</svg>`,
+// 1 陈老湿 - 男，文艺中分，小胡子，睿智
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#6c5ce7"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#f5c5a3"/>
+<path d="M24 44 Q24 14 50 11 Q76 14 76 44 L73 36 Q70 20 50 18 Q30 20 27 36Z" fill="#4a2c17"/>
+<path d="M50 14 L50 38" stroke="#f5c5a3" stroke-width="2"/>
+<circle cx="38" cy="50" r="3" fill="#333"/><circle cx="62" cy="50" r="3" fill="#333"/>
+<circle cx="39" cy="49" r="1" fill="#fff"/><circle cx="63" cy="49" r="1" fill="#fff"/>
+<path d="M36 44 L42 43" stroke="#4a2c17" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M58 43 L64 44" stroke="#4a2c17" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M42 63 Q46 60 50 63 Q54 60 58 63" stroke="#5a3a20" stroke-width="1.5" fill="none"/>
+<path d="M44 68 Q50 72 56 68" stroke="#333" stroke-width="1.8" fill="none"/>
+</svg>`,
+// 2 范小轩 - 女，长卷发，大眼睛，甜美
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#fd79a8"/>
+<ellipse cx="50" cy="62" rx="27" ry="29" fill="#fddcb5"/>
+<path d="M20 48 Q20 12 50 9 Q80 12 80 48 L78 36 Q75 16 50 14 Q25 16 22 36Z" fill="#8b4513"/>
+<path d="M20 46 Q16 68 22 88" stroke="#8b4513" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M80 46 Q84 68 78 88" stroke="#8b4513" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M22 60 Q18 72 24 82" stroke="#8b4513" stroke-width="6" fill="none" stroke-linecap="round"/>
+<path d="M78 60 Q82 72 76 82" stroke="#8b4513" stroke-width="6" fill="none" stroke-linecap="round"/>
+<ellipse cx="38" cy="50" rx="4" ry="4.5" fill="#fff"/><ellipse cx="62" cy="50" rx="4" ry="4.5" fill="#fff"/>
+<circle cx="38" cy="50" r="2.8" fill="#5b3cc4"/><circle cx="62" cy="50" r="2.8" fill="#5b3cc4"/>
+<circle cx="39" cy="49" r="1.2" fill="#fff"/><circle cx="63" cy="49" r="1.2" fill="#fff"/>
+<path d="M34 43 Q38 41 42 43" stroke="#8b4513" stroke-width="1.8" fill="none"/>
+<path d="M58 43 Q62 41 66 43" stroke="#8b4513" stroke-width="1.8" fill="none"/>
+<path d="M44 67 Q50 72 56 67" stroke="#e07070" stroke-width="2" fill="#ff9999"/>
+<circle cx="32" cy="58" r="4" fill="#ffb3b3" opacity="0.4"/>
+<circle cx="68" cy="58" r="4" fill="#ffb3b3" opacity="0.4"/>
+</svg>`,
+// 3 王冰冰 - 女，齐刘海短发，清纯，酒窝
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#00b894"/>
+<ellipse cx="50" cy="62" rx="27" ry="29" fill="#fddcb5"/>
+<path d="M22 46 Q22 14 50 11 Q78 14 78 46 L76 36 Q73 18 50 16 Q27 18 24 36Z" fill="#1a1a2e"/>
+<rect x="26" y="32" width="48" height="12" rx="2" fill="#1a1a2e"/>
+<path d="M22 44 Q18 62 22 78" stroke="#1a1a2e" stroke-width="8" fill="none" stroke-linecap="round"/>
+<path d="M78 44 Q82 62 78 78" stroke="#1a1a2e" stroke-width="8" fill="none" stroke-linecap="round"/>
+<circle cx="38" cy="52" r="3" fill="#333"/><circle cx="62" cy="52" r="3" fill="#333"/>
+<circle cx="39" cy="51" r="1" fill="#fff"/><circle cx="63" cy="51" r="1" fill="#fff"/>
+<path d="M44 68 Q50 74 56 68" stroke="#e07070" stroke-width="2" fill="#ff9999"/>
+<circle cx="40" cy="68" r="1.5" fill="#ffb3b3" opacity="0.6"/>
+<circle cx="60" cy="68" r="1.5" fill="#ffb3b3" opacity="0.6"/>
+<ellipse cx="31" cy="59" rx="4" ry="3" fill="#ffb3b3" opacity="0.35"/>
+<ellipse cx="69" cy="59" rx="4" ry="3" fill="#ffb3b3" opacity="0.35"/>
+</svg>`,
+// 4 蒋三岁 - 女，双马尾，活泼，吐舌头
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#fdcb6e"/>
+<ellipse cx="50" cy="62" rx="27" ry="29" fill="#fddcb5"/>
+<path d="M24 46 Q24 16 50 13 Q76 16 76 46 L73 36 Q70 20 50 18 Q30 20 27 36Z" fill="#d4a574"/>
+<circle cx="18" cy="30" r="10" fill="#d4a574"/><circle cx="82" cy="30" r="10" fill="#d4a574"/>
+<path d="M18 40 Q18 55 16 70" stroke="#d4a574" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M82 40 Q82 55 84 70" stroke="#d4a574" stroke-width="7" fill="none" stroke-linecap="round"/>
+<circle cx="18" cy="28" r="3" fill="#ff6b6b"/>
+<circle cx="82" cy="28" r="3" fill="#ff6b6b"/>
+<circle cx="38" cy="50" r="3.5" fill="#333"/><circle cx="62" cy="50" r="3.5" fill="#333"/>
+<circle cx="39" cy="49" r="1.2" fill="#fff"/><circle cx="63" cy="49" r="1.2" fill="#fff"/>
+<path d="M44 66 Q50 73 56 66" stroke="#e07070" stroke-width="2" fill="#ff9999"/>
+<ellipse cx="50" cy="72" rx="4" ry="3" fill="#ff7070"/>
+<ellipse cx="31" cy="58" rx="5" ry="3" fill="#ffb3b3" opacity="0.45"/>
+<ellipse cx="69" cy="58" rx="5" ry="3" fill="#ffb3b3" opacity="0.45"/>
+</svg>`,
+// 5 曾小贤 - 男，偏分刘海，帅气，坏笑
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#e17055"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#f5c5a3"/>
+<path d="M24 44 Q24 14 50 11 Q76 14 76 44 L73 34 Q70 18 50 16 Q30 18 27 34Z" fill="#2c1810"/>
+<path d="M26 40 Q30 28 50 30 Q38 26 26 36Z" fill="#2c1810"/>
+<circle cx="38" cy="50" r="2.8" fill="#333"/><circle cx="62" cy="50" r="2.8" fill="#333"/>
+<circle cx="39" cy="49" r="0.9" fill="#fff"/><circle cx="63" cy="49" r="0.9" fill="#fff"/>
+<path d="M34 44 L43 46" stroke="#2c1810" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M57 46 L66 44" stroke="#2c1810" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M42 67 Q50 72 58 65" stroke="#333" stroke-width="2" fill="none"/>
+<path d="M56 65 Q58 64 60 65" stroke="#333" stroke-width="1.2" fill="none"/>
+</svg>`,
+// 6 张小翠 - 女，丸子头，温柔，弯弯眼
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#a29bfe"/>
+<ellipse cx="50" cy="62" rx="27" ry="29" fill="#fddcb5"/>
+<path d="M24 48 Q24 18 50 15 Q76 18 76 48 L73 38 Q70 22 50 20 Q30 22 27 38Z" fill="#2c1810"/>
+<circle cx="50" cy="12" r="11" fill="#2c1810"/>
+<line x1="48" y1="1" x2="52" y2="5" stroke="#ff6b6b" stroke-width="2"/>
+<line x1="52" y1="1" x2="48" y2="5" stroke="#ff6b6b" stroke-width="2"/>
+<path d="M34 50 Q38 54 42 50" stroke="#333" stroke-width="2" fill="none"/>
+<path d="M58 50 Q62 54 66 50" stroke="#333" stroke-width="2" fill="none"/>
+<path d="M44 67 Q50 72 56 67" stroke="#e07070" stroke-width="2" fill="#ff9999"/>
+<ellipse cx="31" cy="57" rx="4" ry="3" fill="#ffb3b3" opacity="0.4"/>
+<ellipse cx="69" cy="57" rx="4" ry="3" fill="#ffb3b3" opacity="0.4"/>
+</svg>`,
+// 7 金小萌 - 女，波波头，猫耳发饰，卖萌
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#fab1a0"/>
+<ellipse cx="50" cy="62" rx="27" ry="29" fill="#fddcb5"/>
+<path d="M22 50 Q22 16 50 13 Q78 16 78 50 L76 40 Q73 20 50 18 Q27 20 24 40Z" fill="#c0392b"/>
+<path d="M22 48 L22 70" stroke="#c0392b" stroke-width="10" fill="none" stroke-linecap="round"/>
+<path d="M78 48 L78 70" stroke="#c0392b" stroke-width="10" fill="none" stroke-linecap="round"/>
+<path d="M28 28 L22 12 L38 24Z" fill="#c0392b"/>
+<path d="M72 28 L78 12 L62 24Z" fill="#c0392b"/>
+<path d="M30 18 L26 14 L36 22Z" fill="#ffb3b3"/>
+<path d="M70 18 L74 14 L64 22Z" fill="#ffb3b3"/>
+<circle cx="38" cy="52" r="3.5" fill="#333"/><circle cx="62" cy="52" r="3.5" fill="#333"/>
+<circle cx="39" cy="51" r="1.3" fill="#fff"/><circle cx="63" cy="51" r="1.3" fill="#fff"/>
+<path d="M46 67 Q50 64 54 67" stroke="#333" stroke-width="1.5" fill="none"/>
+<text x="50" y="78" text-anchor="middle" font-size="6" fill="#333">ω</text>
+<ellipse cx="31" cy="60" rx="5" ry="3" fill="#ffb3b3" opacity="0.45"/>
+<ellipse cx="69" cy="60" rx="5" ry="3" fill="#ffb3b3" opacity="0.45"/>
+</svg>`,
+// 8 甄迪帅 - 男，飞机头，墨镜，酷
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#636e72"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#e8b48a"/>
+<path d="M26 44 Q26 16 50 10 Q74 16 74 44 L71 34 Q68 20 50 18 Q32 20 29 34Z" fill="#1a1a2e"/>
+<path d="M40 18 Q50 4 60 18" fill="#1a1a2e"/>
+<path d="M30 48 L46 48 L44 54 L32 54Z" fill="#1a1a2e" opacity="0.85"/>
+<path d="M54 48 L70 48 L68 54 L56 54Z" fill="#1a1a2e" opacity="0.85"/>
+<line x1="46" y1="50" x2="54" y2="50" stroke="#1a1a2e" stroke-width="2"/>
+<path d="M43 68 Q50 73 57 68" stroke="#333" stroke-width="2" fill="none"/>
+</svg>`,
+// 9 周星星 - 男，爆炸头，搞笑，龅牙
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#ffeaa7"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#fddcb5"/>
+<path d="M18 50 Q15 10 50 6 Q85 10 82 50 Q78 20 50 16 Q22 20 18 50Z" fill="#2c1810"/>
+<circle cx="30" cy="22" r="8" fill="#2c1810"/>
+<circle cx="70" cy="22" r="8" fill="#2c1810"/>
+<circle cx="50" cy="10" r="9" fill="#2c1810"/>
+<circle cx="22" cy="36" r="7" fill="#2c1810"/>
+<circle cx="78" cy="36" r="7" fill="#2c1810"/>
+<circle cx="38" cy="50" r="4" fill="#fff"/><circle cx="62" cy="50" r="4" fill="#fff"/>
+<circle cx="38" cy="50" r="2.5" fill="#333"/><circle cx="62" cy="50" r="2.5" fill="#333"/>
+<circle cx="39" cy="49" r="1" fill="#fff"/><circle cx="63" cy="49" r="1" fill="#fff"/>
+<path d="M36 44 Q38 42 42 44" stroke="#2c1810" stroke-width="2" fill="none"/>
+<path d="M58 44 Q62 42 64 44" stroke="#2c1810" stroke-width="2" fill="none"/>
+<path d="M42 66 Q50 76 58 66" stroke="#333" stroke-width="2" fill="#ff9999"/>
+<rect x="46" y="66" width="3.5" height="5" rx="0.5" fill="#fff"/>
+<rect x="50.5" y="66" width="3.5" height="5" rx="0.5" fill="#fff"/>
+</svg>`,
+// 10 刘华仔 - 男，背头，成熟，络腮胡
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#2d3436"/>
+<ellipse cx="50" cy="62" rx="28" ry="30" fill="#d4956b"/>
+<path d="M24 42 Q26 12 50 9 Q74 12 76 42 L73 30 Q70 16 50 14 Q30 16 27 30Z" fill="#1a1a2e"/>
+<path d="M76 42 Q78 38 76 34" stroke="#1a1a2e" stroke-width="3" fill="none"/>
+<circle cx="38" cy="50" r="2.8" fill="#1a1a2e"/><circle cx="62" cy="50" r="2.8" fill="#1a1a2e"/>
+<circle cx="39" cy="49" r="0.8" fill="#fff"/><circle cx="63" cy="49" r="0.8" fill="#fff"/>
+<path d="M34 45 L42 44" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M58 44 L66 45" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M36 72 Q42 68 50 70 Q58 68 64 72" stroke="#3d2b1f" stroke-width="2" fill="none"/>
+<path d="M32 66 Q34 74 38 76 Q42 74 44 66" stroke="#3d2b1f" stroke-width="1.2" fill="none" opacity="0.5"/>
+<path d="M56 66 Q58 74 62 76 Q66 74 68 66" stroke="#3d2b1f" stroke-width="1.2" fill="none" opacity="0.5"/>
+<path d="M44 68 Q50 73 56 68" stroke="#333" stroke-width="2" fill="none"/>
+</svg>`,
+// 11 蒋不通 - 男，光头，圆脸，憨厚笑
+`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="50" fill="#55efc4"/>
+<ellipse cx="50" cy="58" rx="32" ry="34" fill="#fddcb5"/>
+<ellipse cx="50" cy="30" rx="30" ry="8" fill="#f0d0a0" opacity="0.3"/>
+<circle cx="36" cy="50" r="3" fill="#333"/><circle cx="64" cy="50" r="3" fill="#333"/>
+<circle cx="37" cy="49" r="1" fill="#fff"/><circle cx="65" cy="49" r="1" fill="#fff"/>
+<path d="M33 45 Q36 43 40 45" stroke="#a08060" stroke-width="2" fill="none"/>
+<path d="M60 45 Q64 43 67 45" stroke="#a08060" stroke-width="2" fill="none"/>
+<path d="M40 66 Q50 78 60 66" stroke="#333" stroke-width="2.2" fill="#ff9999"/>
+<ellipse cx="30" cy="58" rx="6" ry="4" fill="#ffb3b3" opacity="0.4"/>
+<ellipse cx="70" cy="58" rx="6" ry="4" fill="#ffb3b3" opacity="0.4"/>
+</svg>`
+];
 const POS=['A1','B1','C1','A2','B2','C2','A3','B3','C3','A4','B4','C4'];
 const ROLE_INFO={wolf:{label:'狼人',cls:'role-wolf'},guard:{label:'守卫',cls:'role-guard'},witch:{label:'巫师',cls:'role-witch'},seer:{label:'预言家',cls:'role-seer'},villager:{label:'村民',cls:'role-villager'}};
 
